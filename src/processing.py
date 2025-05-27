@@ -1,5 +1,5 @@
-from typing import List, Dict
 from datetime import datetime
+from typing import Dict, List
 
 
 def filter_by_state(data: List[Dict], state: str = "EXECUTED") -> List[Dict]:
@@ -19,8 +19,4 @@ def sort_by_date(data: List[Dict], reverse: bool = True) -> List[Dict]:
     """
     # Используем встроенную функцию sorted
     # Ключ сортировки — дата, преобразованная в объект datetime
-    return sorted(
-        data,
-        key=lambda operation: datetime.fromisoformat(operation["date"]),
-        reverse=reverse
-    )
+    return sorted(data, key=lambda operation: datetime.fromisoformat(operation["date"]), reverse=reverse)
