@@ -6,7 +6,7 @@ from src.processing import filter_by_state, sort_by_date
 
 
 @pytest.fixture()
-def test_data():
+def test_data() -> List[Dict[str, str]]:
     return [
         {"date": "2023-01-01T10:00:00", "state": "EXECUTED"},
         {"date": "2022-06-15T12:00:00", "state": "PENDING"},

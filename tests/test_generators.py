@@ -1,10 +1,12 @@
+from typing import Dict, List
+
 import pytest
 
 from src.generators import card_number_generator, filter_by_currency, transaction_descriptions
 
 
 @pytest.fixture
-def transactions():
+def transactions() -> List[Dict]:
     return [
         {
             "id": 939719570,
@@ -54,35 +56,50 @@ def transactions():
     ]
 
 
-def test_filter_by_currency_usd(transactions):
+def test_filter_by_currency_usd(transactions: List[Dict]) -> None:
     result = list(filter_by_currency(transactions, "USD"))
     ids = [tx["id"] for tx in result]
     assert ids == [939719570, 142264268, 895315941]
 
 
-def test_filter_by_currency_rub(transactions):
+def test_filter_by_currency_rub(transactions: List[Dict]) -> None:
     result = list(filter_by_currency(transactions, "RUB"))
     ids = [tx["id"] for tx in result]
     assert ids == [873106923, 594226727]
 
 
-def test_filter_by_currency_no_match(transactions):
+def test_filter_by_currency_no_match(transactions: List[Dict]) -> None:
     result = list(filter_by_currency(transactions, "EUR"))
     assert result == []
 
 
-def test_filter_by_currency_empty():
+def test_filter_by_currency_empty() -> None:
     assert list(filter_by_currency([], "USD")) == []
 
-    def test_transaction_descriptions_all(transactions):
-        result = list(transaction_descriptions(transactions))
-        assert result == [
-            "Перевод организации",
-            "Перевод со счета на счет",
-            "Перевод со счета на счет",
-            "Перевод с карты на карту",
-            "Перевод организации",
-        ]
 
-    def test_transaction_descriptions_empty():
-        assert list(transaction_descriptions([])) == []
+def test_transaction_descriptions_all(transactions: List[Dict]) -> None:
+    result = list(transaction_descriptions(transactions))
+    assert result == [
+        "Перевод организации",
+        "Перевод со счета на счет",
+        "Перевод со счета на счет",
+        "Перевод с карты на карту",
+        "Перевод организации",
+    ]
+
+
+def test_transaction_descriptions_empty() -> None:
+    assert list(transaction_descriptions([])) == []
+
+
+@pytest.mark.parametrize(
+    "start, stop, expected",
+    [
+        (1, 1, ["0000 0000 0000 0001"]),
+        (3, 4, ["0000 0000 0000 0003", "0000 0000 0000 0004"]),
+        (9999, 10001, ["0000 0000 0000 9999", "0000 0000 0001 0000", "0000 0000 0001 0001"]),
+    ],
+)
+def test_card_number_generator(start: int, stop: int, expected: List[str]) -> None:
+    result = list(card_number_generator(start, stop))
+    assert result == expected
