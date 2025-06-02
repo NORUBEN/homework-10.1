@@ -36,6 +36,7 @@ poetry run python main.py
 ```text
 Homework_9.1/
 ├── src/
+│   ├── generators.py        # Генераторы транзакций и номеров карт
 │   ├── masks.py            # Маскировка номеров
 │   ├── widget.py           # Преобразование строк и дат
 │   └── processing.py       # Фильтрация и сортировка операций
@@ -203,9 +204,80 @@ operations = [
 - `masks.py`
 - `widget.py`
 - `processing.py`
+- `generators.py`
 
 Используются:
 - фикстуры (`@pytest.fixture`)
 - параметризация (`@pytest.mark.parametrize`)
 - аннотации типов (`mypy`)
 - линтеры (`flake8`, `isort`)
+
+
+## Модуль `generators`
+
+Модуль `generators` предоставляет генераторы для работы с транзакциями и генерации номеров банковских карт.
+
+---
+
+### `filter_by_currency(transactions, currency)`
+
+Фильтрует список транзакций по заданной валюте и возвращает итератор.
+
+- **Аргументы:**
+  - `transactions` — список словарей с транзакциями
+  - `currency` — строка с кодом валюты (например, `"USD"`)
+
+- **Возвращает:** генератор транзакций
+
+**Пример:**
+```python
+from src.generators import filter_by_currency
+
+for tx in filter_by_currency(transactions, "USD"):
+    print(tx["id"], tx["operationAmount"]["amount"])
+```
+
+---
+
+### `transaction_descriptions(transactions)`
+
+Генератор, возвращающий описания операций из транзакций.
+
+- **Аргументы:** список словарей
+- **Возвращает:** генератор строк
+
+**Пример:**
+```python
+from src.generators import transaction_descriptions
+
+for desc in transaction_descriptions(transactions):
+    print(desc)
+```
+
+---
+
+### `card_number_generator(start, stop)`
+
+Генератор номеров карт в формате `XXXX XXXX XXXX XXXX`.
+
+- **Аргументы:**
+  - `start` — начальное значение (int)
+  - `stop` — конечное значение (int)
+
+- **Возвращает:** генератор строк
+
+**Пример:**
+```python
+from src.generators import card_number_generator
+
+for number in card_number_generator(1, 3):
+    print(number)
+```
+
+**Вывод:**
+```
+0000 0000 0000 0001
+0000 0000 0000 0002
+0000 0000 0000 0003
+```
+
