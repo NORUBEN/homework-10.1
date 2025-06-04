@@ -1,7 +1,7 @@
-from typing import Dict, List
+from typing import Dict, Iterator, List
 
 
-def filter_by_currency(transactions: List[Dict], currency: str):
+def filter_by_currency(transactions: List[Dict], currency: str) -> Iterator[Dict]:
     """Фильтрует транзакции по заданной валюте и возвращает итератор"""
     for transaction in transactions:
         currency_info = transaction.get("operationAmount", {}).get("currency", {})
@@ -10,15 +10,15 @@ def filter_by_currency(transactions: List[Dict], currency: str):
             yield transaction
 
 
-def transaction_descriptions(transactions: List[Dict]):
+def transaction_descriptions(transactions: List[Dict]) -> Iterator[str]:
     """Генератор, возвращающий описания транзакций"""
     for transaction in transactions:
         yield transaction.get("description", "")
 
 
-def card_number_generator(start: int, stop: int):
+def card_number_generator(start: int, stop: int) -> Iterator[str]:
     """Генератор номеров карт от start до stop включительно"""
     for number in range(start, stop + 1):
         card_number = f"{number:016}"
-        formatted = " ".join(card_number[i:i + 4] for i in range(0, 16, 4))
+        formatted = " ".join(card_number[i : i + 4] for i in range(0, 16, 4))
         yield formatted
