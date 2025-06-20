@@ -1,5 +1,3 @@
-
-
 # 🏦 Виджет банковских операций
 
 ## 📌 Цель проекта
@@ -293,3 +291,30 @@ for number in card_number_generator(1, 3):
 @log(filename="log.txt")
 def add(a, b):
     return a + b
+```
+
+---
+
+##  Импорт транзакций из файлов
+
+Теперь проект поддерживает загрузку транзакций не только из JSON, но и из **CSV** и **Excel (XLSX)** файлов.
+
+###  Поддерживаемые форматы:
+- CSV (`.csv`)
+- Excel (`.xlsx`)
+
+###  Использование:
+
+```python
+from src.importers import read_csv_transactions, read_excel_transactions
+
+csv_data = read_csv_transactions("data/transactions.csv")
+excel_data = read_excel_transactions("data/transactions_excel.xlsx")
+```
+
+Обе функции возвращают список словарей с транзакциями.
+
+###  Тесты
+
+Для функций чтения CSV и Excel реализованы модульные тесты с использованием `pytest`, `patch` и `mock`.  
+Тесты расположены в `tests/test_importers.py` и покрывают не менее 80% функционального кода.

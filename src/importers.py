@@ -11,5 +11,5 @@ def read_csv_transactions(file_path: str) -> List[Dict]:
 
 def read_excel_transactions(file_path: str) -> List[Dict]:
     """Считывает транзакции из Excel-файла."""
-    df = pd.read_excel(file_path)
+    df = pd.read_excel(file_path, engine="openpyxl")
     return df.to_dict(orient="records")
