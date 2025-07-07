@@ -3,6 +3,7 @@ from typing import Dict, List
 import pytest
 
 from src.processing import filter_by_state, sort_by_date
+from src.processing import process_bank_search, process_bank_operations
 
 
 @pytest.fixture()
@@ -35,3 +36,33 @@ def test_sort_by_date_reverse_false(test_data: List[Dict[str, str]]) -> None:
     sorted_list = sort_by_date(test_data, reverse=False)
     for i in range(len(sorted_list) - 1):
         assert sorted_list[i]["date"] <= sorted_list[i + 1]["date"]
+
+transactions = [
+    {"description": "Оплата мобильной связи"},
+    {"description": "Покупка в магазине"},
+    {"description": "Оплата ЖКХ"},
+    {"description": "Подарок другу"},
+]
+
+
+def test_process_bank_search_found():
+    result = process_bank_search(transactions, "оплата")
+    assert len(result) == 2
+    assert all("оплата" in item["description"].lower() for item in result)
+
+
+def test_process_bank_search_not_found():
+    result = process_bank_search(transactions, "налоги")
+    assert result == []
+
+
+def test_process_bank_operations_count():
+    categories = ["Оплата ЖКХ", "Покупка в магазине"]
+    result = process_bank_operations(transactions, categories)
+    assert result == {"Оплата ЖКХ": 1, "Покупка в магазине": 1}
+
+
+def test_process_bank_operations_empty():
+    categories = ["Авто"]
+    result = process_bank_operations(transactions, categories)
+    assert result == {}
