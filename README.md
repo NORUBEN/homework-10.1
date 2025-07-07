@@ -318,3 +318,33 @@ excel_data = read_excel_transactions("data/transactions_excel.xlsx")
 
 Для функций чтения CSV и Excel реализованы модульные тесты с использованием `pytest`, `patch` и `mock`.  
 Тесты расположены в `tests/test_importers.py` и покрывают не менее 80% функционального кода.
+
+---
+
+##  Работа с регулярными выражениями и подсчёт категорий
+
+### `process_bank_search(data: List[Dict], search: str) -> List[Dict]`
+
+Ищет в описании операций совпадения с заданной строкой, используя регулярные выражения (`re`).
+
+**Пример:**
+```python
+from src.processing import process_bank_search
+
+process_bank_search(operations, "перевод")
+# ➜ [{'description': 'Перевод со счета на счет', ...}, {...}]
+```
+
+---
+
+### `process_bank_operations(data: List[Dict], categories: List[str]) -> Dict[str, int]`
+
+Подсчитывает количество операций по каждой из переданных категорий. Использует `Counter` из `collections`.
+
+**Пример:**
+```python
+from src.processing import process_bank_operations
+
+process_bank_operations(operations, ["перевод", "вклад"])
+# ➜ {'перевод': 3, 'вклад': 1}
+```
