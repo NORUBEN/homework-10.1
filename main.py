@@ -1,1 +1,0 @@
-# фиктивный пуш feature/generators
