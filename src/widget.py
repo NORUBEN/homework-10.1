@@ -11,10 +11,10 @@ def mask_account_card(data: str) -> str:
     """
     parts = data.split()
     if parts[0] == "Счет":
-        return f"Счет {get_mask_account(int(parts[1]))}"
+        return f"Счет {get_mask_account(parts[1])}"
     else:
         card_type = " ".join(parts[:-1])
-        card_number = int(parts[-1])
+        card_number = parts[-1]
         return f"{card_type} {get_mask_card_number(card_number)}"
 
 
