@@ -14,12 +14,19 @@ from src.processing import (
 
 
 def filter_by_currency(data: List[Dict], currency_name: str) -> List[Dict]:
-    """Фильтрует список операций по валюте (по умолчанию: рубли)."""
-    return [
-        item
-        for item in data
-        if item.get("operationAmount", {}).get("currency", {}).get("name", "").lower() == currency_name.lower()
-    ]
+    """Фильтрует список операций по валюте: работает как с JSON, так и с CSV/XLSX"""
+    result = []
+    for item in data:
+        # путь для JSON
+        json_currency = item.get("operationAmount", {}).get("currency", {}).get("name", "")
+        # путь для CSV/XLSX
+        csv_xlsx_currency = item.get("currency_name", "")
+        if (
+            json_currency.lower() == currency_name.lower()
+            or csv_xlsx_currency.lower() == currency_name.lower()
+        ):
+            result.append(item)
+    return result
 
 
 def main():
@@ -71,7 +78,11 @@ def main():
 
     # Фильтрация по рублям
     if input("Программа: Выводить только рублевые транзакции? Да/Нет\nПользователь: ").strip().lower() == "да":
-        transactions = filter_by_currency(transactions, "руб")
+        if choice == "1":
+            rub_name = "руб."
+        else:
+            rub_name = "Ruble"
+        transactions = filter_by_currency(transactions, rub_name)
 
     # Поиск по описанию
     if (
@@ -97,8 +108,16 @@ def main():
         description = tx.get("description", "Без описания")
         from_acc = tx.get("from")
         to_acc = tx.get("to")
-        amount = tx.get("operationAmount", {}).get("amount", "")
-        currency = tx.get("operationAmount", {}).get("currency", {}).get("name", "")
+        amount = (
+                tx.get("operationAmount", {}).get("amount")
+                or tx.get("amount")
+                or ""
+        )
+        currency = (
+                tx.get("operationAmount", {}).get("currency", {}).get("name")
+                or tx.get("currency_name")
+                or ""
+        )
 
         print(f"{date} {description}")
         if from_acc and to_acc:
