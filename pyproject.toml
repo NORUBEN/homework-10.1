@@ -7,7 +7,7 @@ authors = [
 ]
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = ["requests (>=2.32.3,<3.0.0)", "python-dotenv (>=1.1.0,<2.0.0)", "pandas (>=2.3.0,<3.0.0)", "openpyxl (>=3.1.5,<4.0.0)"]
+dependencies = []
 
 [tool.poetry]
 packages = [{include = "src"}]
@@ -17,14 +17,6 @@ flake8 = "^7.1.2"
 black = "^25.1.0"
 isort = "^6.0.0"
 mypy = "^1.15.0"
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-pytest-cov = "^6.1.1"
-types-requests = "^2.32.0.20250602"
-pytest-html = "^4.1.1"
-pandas-stubs = "^2.2.3.250527"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
